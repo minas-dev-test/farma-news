@@ -1,13 +1,33 @@
 FROM wordpress:4.9.8-php7.2-apache
 
-# WORKDIR /var/www/html
+# SETTINGS
 
-# RUN echo "define( 'WP_USE_THEMES', false );" >> wp-config.php 
-# RUN echo "echo 'WP_USE_THEMES';" >> index.php 
-# RUN touch xer.php
+# ENV WORDPRESS_CLI_VERSION 2.0.1
+ENV DOCKERIZE_VERSION v0.6.1
+# WordPress default settings
+ENV WORDPRESS_URL 'http://localhost'
+ENV WORDPRESS_TITLE 'WordPress Site'
+ENV WORDPRESS_ADMIN_USER admin
+ENV WORDPRESS_ADMIN_PASSWORD admin
+ENV WORDPRESS_ADMIN_MAIL admin@example.com
+ENV WORDPRESS_LANGUAGE pt_BR
+
+# Install WP-CLI (http://wp-cli.org)
+RUN curl -o /bin/wp https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+  && chmod +x /bin/wp
+
+# Install dockerize (https://github.com/jwilder/dockerize)
+# RUN curl -sL https://github.com/jwilder/dockerize/releases/download/${DOCKERIZE_VERSION}/dockerize-linux-amd64-${DOCKERIZE_VERSION}.tar.gz \
+#     | tar -C /usr/bin -xzvf - 
+
+# Install Wait For It
+RUN curl -o /bin/wait-for-it https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh \
+  && chmod +x /bin/wait-for-it
 
 COPY startup.sh /usr/local/bin/
+
 ADD content /usr/src/farma
-# RUN echo "//de boas" >> /usr/src/wordpress/wp-config-sample.php
+
+
 ENTRYPOINT [ "startup.sh" ]
 CMD ["apache2-foreground"]
