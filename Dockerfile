@@ -1,4 +1,4 @@
-FROM wordpress:4.9.8-php7.2-apache
+FROM wordpress:latest
 
 # SETTINGS
 
